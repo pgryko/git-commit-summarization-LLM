@@ -1,21 +1,26 @@
 # Git Commit Summarization with LLMs
 
-This repository contains a collection of shell scripts that use various Large Language Models (LLMs) to automatically generate commit messages based on git diffs. These scripts compare your changes against a reference branch (typically staging) and use AI to create conventional commit messages with bullet points.
+This repository contains a collection of shell scripts that use various Large Language Models (LLMs) to automatically generate commit messages and perform code reviews based on git diffs. These scripts compare your changes against a reference branch (typically staging) and use AI to provide insights.
 
 ## Available Scripts
 
+### Commit Message Generation
 - `git_diff_to_gpt4.sh` - Uses OpenAI's GPT-4 model
 - `git_diff_to_groq.sh` - Uses Groq's DeepSeek Llama 70B model
 - `git_diff_to_deepseek.sh` - Uses DeepSeek's model
 - `git_diff_to_gemini.sh` - Uses Google's Gemini 2.5 Pro Experimental model
 
+### Code Review
+- `git_review_gemini.sh` - Uses Google's Gemini 2.5 Pro Experimental model to perform a detailed code review
+
 ## Prerequisites
 
 - `jq` for JSON processing
+- Python 3.7+ for JSON handling
 - An API key for the LLM service you wish to use:
   - OpenAI API key for GPT-4
   - Groq API key for Groq
-  - Google API key for Gemini
+  - Google API key for Gemini (as GEMINI_API_KEY)
 - For the UI:
   - Python 3.7+ with Flask and Flask-CORS
 
@@ -26,7 +31,7 @@ This repository contains a collection of shell scripts that use various Large La
 3. Set the appropriate API key as an environment variable:
    - For OpenAI: `export OPENAI_API_KEY="your-api-key"`
    - For Groq: `export GROQ_API_KEY="your-api-key"`
-   - For Google: `export GOOGLE_API_KEY="your-api-key"`
+   - For Google: `export GEMINI_API_KEY="your-api-key"`
 
 ### UI Setup (Optional)
 
@@ -46,7 +51,11 @@ This repository contains a collection of shell scripts that use various Large La
 
 Run any script directly:
 ```bash
+# Generate commit message
 ./git_diff_to_gemini.sh
+
+# Get code review
+./git_review_gemini.sh
 ```
 
 Or add convenient aliases to your shell configuration (e.g., `~/.zshrc`):
@@ -57,6 +66,7 @@ alias gdiffgpt4="$HOME/path/to/git_diff_to_gpt4.sh"
 alias gdiffgroq="$HOME/path/to/git_diff_to_groq.sh"
 alias gdiffdeep="$HOME/path/to/git_diff_to_deepseek.sh"
 alias gdiffgemini="$HOME/path/to/git_diff_to_gemini.sh"
+alias greview="$HOME/path/to/git_review_gemini.sh"
 
 alias gs="git status"
 alias glog="git --no-pager log HEAD ^staging"
@@ -73,10 +83,23 @@ alias glog="git --no-pager log HEAD ^staging"
 
 ## How It Works
 
+### Commit Message Generation
 1. The script captures the git diff between your current branch and the staging branch
 2. It formats a prompt asking the LLM to create a conventional commit message
 3. The prompt is sent to the respective LLM API
 4. The script displays the generated commit message
+
+### Code Review
+1. The script captures the git diff between your current branch and the staging branch
+2. It sends the diff to the LLM with a prompt requesting a detailed code review
+3. The review includes:
+   - High-level summary of changes
+   - Potential issues or concerns
+   - Security considerations
+   - Performance implications
+   - Code style and best practices
+   - Suggestions for improvement
+   - Recommended test coverage
 
 ## Project Structure
 
