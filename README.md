@@ -16,6 +16,8 @@ This repository contains a collection of shell scripts that use various Large La
   - OpenAI API key for GPT-4
   - Groq API key for Groq
   - Google API key for Gemini
+- For the UI:
+  - Python 3.7+ with Flask and Flask-CORS
 
 ## Setup
 
@@ -26,7 +28,21 @@ This repository contains a collection of shell scripts that use various Large La
    - For Groq: `export GROQ_API_KEY="your-api-key"`
    - For Google: `export GOOGLE_API_KEY="your-api-key"`
 
+### UI Setup (Optional)
+
+1. Install the required Python packages:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Run the Flask server:
+   ```bash
+   python git_diff_server.py
+   ```
+3. Open your browser and navigate to http://localhost:5000
+
 ## Usage
+
+### Command Line Usage
 
 Run any script directly:
 ```bash
@@ -46,12 +62,28 @@ alias gs="git status"
 alias glog="git --no-pager log HEAD ^staging"
 ```
 
+### Web UI Usage
+
+1. Ensure the Flask server is running (`python git_diff_server.py`)
+2. Navigate to http://localhost:5000 in your browser
+3. Select the LLM you want to use from the options at the top
+4. Click "Generate Commit Message"
+5. View the git diff and the generated commit message in the respective tabs
+6. Use the "Copy" button to copy either the diff or the commit message to your clipboard
+
 ## How It Works
 
 1. The script captures the git diff between your current branch and the staging branch
 2. It formats a prompt asking the LLM to create a conventional commit message
 3. The prompt is sent to the respective LLM API
 4. The script displays the generated commit message
+
+## Project Structure
+
+- `*.sh` - Shell scripts for different LLM providers
+- `git_diff_ui.html` - Frontend UI for the web interface
+- `git_diff_server.py` - Flask backend server to connect the UI with the shell scripts
+- `requirements.txt` - Python package dependencies
 
 ## Contributing
 
