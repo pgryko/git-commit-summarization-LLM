@@ -16,12 +16,16 @@ payload=$(jq -nc --arg content "$diff_content" '{
    "temperature": 1
 }')
 
+if [[ -z "${GROQ_API_KEY:-}" ]]; then
+  echo "Error: GROQ_API_KEY is not set." >&2
+  exit 1
+fi
+
 # Pass the payload to the OpenAI API chat completions endpoint
-response=$(curl -s -X POST https://api.groq.com/openai/v1/chat/completions \
+response=$(curl -sS -X POST https://api.groq.com/openai/v1/chat/completions \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $GROQ_API_KEY" \
-    --data "$payload")
-
+    --data "$payload") || { echo "API request failed" >&2; exit 1; }
 echo $response 
 echo $response | jq -r '.choices[0].message.content'
 
