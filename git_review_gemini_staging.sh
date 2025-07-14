@@ -25,13 +25,13 @@ files_changed_file=$(mktemp)
 trap 'rm -f "$payload_file" "$diff_file" "$files_changed_file"' EXIT
 
 # Get list of changed files
-git diff --name-status main > "$files_changed_file"
+git diff --name-status staging > "$files_changed_file"
 
 # Get the diff either from the environment variable or directly from git
 if [[ -n "${DIFF_FILE:-}" ]] && [[ -f "$DIFF_FILE" ]]; then
     cat "$DIFF_FILE" > "$diff_file"
 else
-    git --no-pager diff main > "$diff_file"
+    git --no-pager diff staging > "$diff_file"
 fi
 
 # Check if there are any changes

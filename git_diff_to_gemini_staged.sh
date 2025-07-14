@@ -24,19 +24,19 @@ diff_file=$(mktemp)
 files_changed_file=$(mktemp)
 trap 'rm -f "$payload_file" "$diff_file" "$files_changed_file"' EXIT
 
-# Get list of changed files
-git diff --name-status main > "$files_changed_file"
+# Get list of staged files
+git diff --cached --name-status > "$files_changed_file"
 
 # Get the diff either from the environment variable or directly from git
 if [[ -n "${DIFF_FILE:-}" ]] && [[ -f "$DIFF_FILE" ]]; then
     cat "$DIFF_FILE" > "$diff_file"
 else
-    git --no-pager diff main > "$diff_file"
+    git --no-pager diff --cached > "$diff_file"
 fi
 
-# Check if there are any changes
+# Check if there are any staged changes
 if [[ ! -s "$diff_file" ]]; then
-    echo "No changes found between current branch and staging."
+    echo "No staged changes found. Use 'git add' to stage files for review."
     exit 0
 fi
 
